@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>真植篇訂購說明</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    
+    <style>
+        /* 移除 p 元素預設的 font-size，只保留 font-weight: bold */
+        p {
+          font-weight: bold;
+        }
+        #orderButton {
+          font-size: 20px; /* 調整按鈕字體大小 */
+          padding: 15px 30px; /* 增加按鈕內部的間距 */
+          background-color: #4CAF50; /* 綠色背景 */
+          color: white; /* 按鈕文字顏色 */
+          border: none; /* 移除邊框 */
+          border-radius: 5px; /* 添加圓角 */
+          cursor: pointer; /* 鼠標指向時顯示手型 */
+        }
+        #orderButton:hover {
+          background-color: #45a049; /* 滑鼠移過時的背景顏色 */
+        }
+      </style>
+      
+      <!-- 每個段落都使用不同的 font-size -->
+      <p id="greeting" style="color: #91081f; font-size: 26px;">載入中請稍後...</p>
+      <p id="greeting" style="color: #e31029; font-size: 20px;">真植篇(上下兩冊)為一套，</p>
+      <p id="greeting" style="color: #e31029; font-size: 20px;">一套為新台幣2000元整，</p>
+      <p style="font-size: 18px;">『單筆訂購』因套數不同而有三個方案，</p>
+      <p style="font-size: 18px;">請閱讀下面文章，</p>
+      <p style="font-size: 18px;">並了解你想要的方案，</p>
+      <p style="font-size: 18px;">然後按下【我想要訂購真植篇】按鈕，</p>
+      <p style="font-size: 18px;">進行訂購流程</p>
+      <button id="orderButton">我想要訂購真植篇</button>
+      
+    <div style="position: relative; width: 100%; height: 0; padding-top: 177.7778%;
+    padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+    border-radius: 8px; will-change: transform;">
+     <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+       src="https://www.canva.com/design/DAGdQqYIvVk/h-Kp52i_IiVxKO-Q0LYZpA/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+     </iframe>
+   </div>
+    <script>
+        // 填入你的 LIFF ID
+        const LIFF_ID = "2006779432-WqN6Q6qx";
+
+        // 初始化 LIFF
+        async function initLiff() {
+            try {
+                await liff.init({ liffId: LIFF_ID });
+                if (!liff.isLoggedIn()) {
+                    liff.login(); // 如果未登入，重定向至 LINE 登入頁面
+                }
+
+                // 獲取用戶資料
+                const profile = await liff.getProfile();
+                document.getElementById("greeting").innerText = `您好，${profile.displayName}！`;
+
+                // 綁定按鈕事件
+                document.getElementById("orderButton").addEventListener("click", async () => {
+                    try {
+                        // 傳送 "訂購" 訊息給機器人
+                        await liff.sendMessages([
+                            {
+                                type: "text",
+                                text: "真植篇訂購"
+                            }
+                        ]);
+
+                        // 關閉 LIFF 網頁
+                        liff.closeWindow();
+                    } catch (err) {
+                        console.error("傳送訊息失敗", err);
+                    }
+                });
+            } catch (err) {
+                console.error("LIFF 初始化失敗", err);
+            }
+        }
+
+        // 執行初始化
+        initLiff();
+    </script>
+</body>
+</html>
