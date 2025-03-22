@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>選擇套數</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .number {
+      font-size: 2rem;
+      color: #007BFF;
+      margin: 20px 0;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button.increment {
+      background-color: #28a745;
+      color: #fff;
+    }
+    button.decrement {
+      background-color: #dc3545;
+      color: #fff;
+    }
+    button.send-message {
+      background-color: #007bff;
+      color: #fff;
+      margin-top: 20px;
+      width: 100%;
+    }
+  </style>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>請透過加減選擇書籍套數</h1>
+    <div class="number" id="count">0</div>
+    <div class="buttons">
+      <button class="increment" onclick="increment()">+1</button>
+      <button class="decrement" onclick="decrement()">-1</button>
+    </div>
+    <button class="send-message" onclick="sendMessage()">按我送出</button>
+  </div>
+
+  <script>
+    let count = 0;
+
+    // 增加數字
+    function increment() {
+      count++;
+      document.getElementById('count').innerText = count;
+    }
+
+    // 減少數字
+    function decrement() {
+      count--;
+      document.getElementById('count').innerText = count;
+    }
+
+    // 初始化 LIFF
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: '2006779432-ro0bObkQ' }); // 替換 YOUR_LIFF_ID 為你的 LIFF ID
+        console.log('LIFF 初始化成功');
+      } catch (error) {
+        console.error('LIFF 初始化失敗', error);
+      }
+    }
+
+    // 發送訊息到 LINE 聊天
+    function sendMessage() {
+      if (!liff.isInClient()) {
+        alert('請在 LINE 應用程式內使用此功能');
+        return;
+      }
+
+      liff.sendMessages([
+        {
+          type: 'text',
+          text: `${count}`,
+        },
+      ])
+      .then(() => {
+          liff.closeWindow(); // 訊息發送成功後立即關閉視窗
+        })
+        .catch((err) => {
+          console.error('發送訊息失敗', err);
+          // 即使發送失敗，也可以選擇關閉視窗（可按需求決定）
+          liff.closeWindow();
+        });
+    }
+
+    // 在頁面載入時初始化 LIFF
+    window.onload = initializeLiff;
+  </script>
+</body>
+</html>
